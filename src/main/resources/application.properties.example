@@ -1,0 +1,5 @@
+spring.application.name=JobPostingToIndeed
+indeed.client.id=indeedClientId
+indeed.client.secret=indeedClientSecret
+oauth.token-url=https://apis.indeed.com/oauth/v2/tokens
+appinfo.url=https://secure.indeed.com/v2/api/appinfo
