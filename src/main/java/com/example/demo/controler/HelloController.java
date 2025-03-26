@@ -27,11 +27,13 @@ public class HelloController {
     public String index() {
         String accessToken = oauthService.getAccessToken().block();
 
-        String employerId = oauthService.getEmployer(accessToken).block();
-        String getEmployerAccessToken = oauthService.getEmployerAccessToken(employerId).block();
-    
-        String getUserInfo = oauthService.getUserInfo(getEmployerAccessToken).block();
-        return getUserInfo;
+         String employerId = oauthService.getEmployer(accessToken).block();
+         String getEmployerAccessToken = oauthService.getEmployerAccessToken(employerId).block();
+        logger.info(accessToken);
+        return employerId;
+        // String getUserInfo = oauthService.getUserInfo(accessToken).block();
+        // String getAuthentication = oauthService.getAuthentication().block();
+        // return getAuthentication;
         // String requestBody = "{\n" +
         //     "  \"query\": \"mutation {\\n" +
         //     "    jobsIngest {\\n" +
@@ -77,7 +79,7 @@ public class HelloController {
         //     "}" +
         //     "}";
 
-        //     return graphQLService.postJob(getEmployerAccessToken, requestBody);
+        //     return graphQLService.postJob(accessToken, requestBody);
     
     }
 }

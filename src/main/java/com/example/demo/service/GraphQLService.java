@@ -1,8 +1,9 @@
 package com.example.demo.service;
 
-import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 
 import com.example.demo.dto.GraphQLRequest;
@@ -11,6 +12,8 @@ import com.example.demo.dto.GraphQLRequest;
 @Service
 public class GraphQLService {
     private final RestTemplate restTemplate;
+
+    private static final Logger logger = LoggerFactory.getLogger(GraphQLService.class);
 
     public GraphQLService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
