@@ -29,11 +29,11 @@ public class HelloController {
 
          String employerId = oauthService.getEmployer(accessToken).block();
          String getEmployerAccessToken = oauthService.getEmployerAccessToken(employerId).block();
-        logger.info(accessToken);
-        return employerId;
-        // String getUserInfo = oauthService.getUserInfo(accessToken).block();
-        // String getAuthentication = oauthService.getAuthentication().block();
-        // return getAuthentication;
+        // logger.info(accessToken);
+        // return employerId;
+        String getUserInfo = oauthService.getUserInfo(getEmployerAccessToken).block();
+        // String getAuthentication = oauthService.getAuthentication().block();                         
+        return getUserInfo;
         // String requestBody = "{\n" +
         //     "  \"query\": \"mutation {\\n" +
         //     "    jobsIngest {\\n" +

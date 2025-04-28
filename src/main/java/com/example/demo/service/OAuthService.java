@@ -66,32 +66,32 @@ public class OAuthService {
     }
 
     // Get or refresh 2-legged access token
-    // public Mono<String> getAuthentication() {
-    //     return webClient.post()
-    //         .uri("https://secure.indeed.com/oauth/v2/authorize")
-    //         .header("Content-Type", "application/x-www-form-urlencoded")
-    //         .header("Accept", "application/json")
-    //         .body(BodyInserters.fromFormData("client_id", authenticationId)
-    //                 // .with("client_secret", authenticationSecret)
-    //                 .with("redirect_uri", "https://dev.management.joblit.jp/api")
-    //                 .with("response_type", "code")
-    //                 .with("state", "employer12341235")
-    //                 .with("scope", "employer_access email offline_access"))
-    //         .retrieve()
-    //         .onStatus(status -> status.is4xxClientError(), clientResponse -> {
-    //             return clientResponse.bodyToMono(String.class).flatMap(body -> {
-    //                 logger.error("4xx Client Error: {}", clientResponse.statusCode());
-    //                 return Mono.error(new RuntimeException("Client error: " + body));
-    //             });
-    //         })
-    //         .onStatus(status -> status.is5xxServerError(), clientResponse -> {
-    //             return clientResponse.bodyToMono(String.class).flatMap(body -> {
-    //                 return Mono.error(new RuntimeException("Server error: " + body));
-    //             });
-    //         })
-    //         .bodyToMono(Map.class)
-    //         .map(response -> (String) response.get("access_token"));
-    // }
+    public Mono<String> getAuthentication() {
+        return webClient.post()
+            .uri("https://secure.indeed.com/oauth/v2/authorize")
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .header("Accept", "application/json")
+            .body(BodyInserters.fromFormData("client_id", authenticationId)
+                    // .with("client_secret", authenticationSecret)
+                    .with("redirect_uri", "https://dev.management.joblit.jp/api")
+                    .with("response_type", "code")
+                    .with("state", "employer12341235")
+                    .with("scope", "employer_access email offline_access"))
+            .retrieve()
+            .onStatus(status -> status.is4xxClientError(), clientResponse -> {
+                return clientResponse.bodyToMono(String.class).flatMap(body -> {
+                    logger.error("4xx Client Error: {}", clientResponse.statusCode());
+                    return Mono.error(new RuntimeException("Client error: " + body));
+                });
+            })
+            .onStatus(status -> status.is5xxServerError(), clientResponse -> {
+                return clientResponse.bodyToMono(String.class).flatMap(body -> {
+                    return Mono.error(new RuntimeException("Server error: " + body));
+                });
+            })
+            .bodyToMono(Map.class)
+            .map(response -> (String) response.get("access_token"));
+    }
     
     // Build employer selection screen
     public Mono<String> getEmployer(String accessToken) {
@@ -112,6 +112,7 @@ public class OAuthService {
         .bodyToMono(Map.class)
         .map(response -> {
             List<Map<String, String>> employers = (List<Map<String, String>>) response.get("employers");
+            logger.info("List of employers: {}", employers);
             if (employers != null && !employers.isEmpty()) {
                 return employers.get(0).get("id");
             } else {
@@ -148,12 +149,10 @@ public class OAuthService {
 
     // Build user info section
     public Mono<String> getUserInfo(String accessToken) {
-        logger.info("access token : {}", accessToken);
         return webClient.get()
         .uri(userInfoUrl)
         .header("Authorization", "Bearer " + accessToken)
         .header("Content-Type", "application/json") 
-
         .retrieve()
         .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> 
             clientResponse.bodyToMono(String.class).flatMap(body -> {
